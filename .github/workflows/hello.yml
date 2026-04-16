@@ -4,14 +4,14 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/2 * * * *'
 
 permissions:
   contents: read
   security-events: write
 
 env:
-  APP_ENV: dev
+  APP_ENV: UAT
   NODE_ENV: development
   AWS_REGION: us-east-1
   APP_URL: https://dev.example.com
