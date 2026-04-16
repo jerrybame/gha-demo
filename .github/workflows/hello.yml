@@ -85,10 +85,12 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        run: npm install --if-present
+        run: |
+          if [ -f package.json ]; then npm install; else echo "No package.json found, skipping"; fi
 
       - name: Run tests
-        run: npm test --if-present || echo "No test script found, skipping"
+        run: |
+          if [ -f package.json ]; then npm test --if-present; else echo "No package.json found, skipping"; fi
 
   build:
     name: Build
@@ -105,10 +107,12 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          if [ -f package.json ]; then npm install; else echo "No package.json found, skipping"; fi
 
       - name: Build
-        run: npm run build --if-present
+        run: |
+          if [ -f package.json ]; then npm run build --if-present; else echo "No package.json found, skipping"; fi
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
