@@ -1,4 +1,4 @@
-name: CI
+name: Code Quality
 
 on:
   push:
@@ -8,21 +8,40 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  lint:
+    name: Lint & Format Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '20'
-          cache: 'npm'
+          python-version: '3.12'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install linting tools
+        run: pip install flake8 black
 
-      - name: Run tests
-        run: npm test
+      - name: Run flake8
+        run: flake8 . --max-line-length=88 --exclude=.git,__pycache__
+
+      - name: Check formatting with black
+        run: black --check .
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
