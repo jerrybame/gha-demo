@@ -10,6 +10,12 @@ permissions:
   contents: read
   security-events: write
 
+env:
+  APP_ENV: dev
+  NODE_ENV: development
+  AWS_REGION: us-east-1
+  APP_URL: https://dev.example.com
+
 jobs:
   greet:
     name: Greet
